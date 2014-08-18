@@ -11,8 +11,10 @@ myLMModel1 <- setRefClass(Class = "myLMModel1",
                               },
                               
                               customTrain = function(featureData, responseData,...){
-                                
-                                  .self$model <- lm(responseData ~ featureData,...)                                   
+                                  y<-responseData
+                                  x<-featureData
+                                  DD<-data.frame(x = featureData,y = responseData)
+                                  .self$model <- lm(DD$y ~ DD$x,...)                                   
                                 
                               },
                               

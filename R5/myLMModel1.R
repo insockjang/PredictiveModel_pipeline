@@ -12,9 +12,7 @@ myLMModel1 <- setRefClass(Class = "myLMModel1",
                               
                               customTrain = function(featureData, responseData,...){
                                 
-                                  .self$model <- lm(responseData ~ featureData,...) 
-                                  
-                                }
+                                  .self$model <- lm(responseData ~ featureData,...)                                   
                                 
                               },
                               

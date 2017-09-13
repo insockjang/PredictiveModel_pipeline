@@ -1,6 +1,6 @@
 myBSModel1<-function(kk,
-                    data.set = c("CCLE","Sanger"),
-                    data.type = c("Mh","C","CMo","CMh","E","EMo","EMh","EC","ECMo","ECMh","MhL","CL","CMoL","CMhL","EL","EMoL","EMhL","ECL","ECMoL","ECMhL"), 
+                    data.set = c("CCLE","Sanger","PRISM"),
+                    data.type = c("Mh","C","CMo","CMh","E","EMo","EMh","EC","ECMo","ECMh","MhL","CL","CMoL","CMhL","EL","EMoL","EMhL","ECL","ECMoL","ECMhL","E_rnaseq"), 
                     drug.type = c("ActArea","IC50","EC50"), 
                     model.type = c("ENet","Lasso","Ridge"), 
                     numBS = NULL,
@@ -8,7 +8,7 @@ myBSModel1<-function(kk,
   require(predictiveModeling)
   require(synapseClient)
   synapseLogin("in.sock.jang@sagebase.org","tjsDUD@")
-  source("~/PredictiveModel_pipeline/R5/bootstrapPredictiveModel1.R")
+  source("~/Code/PredictiveModel_pipeline/R5/bootstrapPredictiveModel1.R")
   
   myCCLE<-function(X,Y){
     dataSets<-myData_CCLE_new(X,Y)
@@ -18,20 +18,24 @@ myBSModel1<-function(kk,
     dataSets<-myData_Sanger(X,Y)
     return(dataSets)
   }
+  myPRISM <- function(X,Y){
+    dataSets<-myData_PRISM(X,Y)
+    return(dataSets)
+  }
   
   myENet<-function(X,Y){
-    source("~/PredictiveModel_pipeline/R5/myEnetModel1.R")
+    source("~/Code/PredictiveModel_pipeline/R5/myEnetModel1.R")
     alphas =unique(createENetTuneGrid()[,1])    
     BS<-bootstrapPredictiveModel1(X,Y, model = myEnetModel1$new(), numBootstrap= numBS, alpha=alphas,core = numCore)
     return(BS)
   }
   myLasso<-function(X,Y){
-    source("~/PredictiveModel_pipeline/R5/myEnetModel1.R")    
+    source("~/Code/PredictiveModel_pipeline/R5/myEnetModel1.R")    
     BS<-bootstrapPredictiveModel1(X,Y, model = myEnetModel1$new(), numBootstrap= numBS, alpha=1,core = numCore)
     return(BS)
   }
   myRidge<-function(X,Y){
-    source("~/PredictiveModel_pipeline/R5/myEnetModel1.R")    
+    source("~/Code/PredictiveModel_pipeline/R5/myEnetModel1.R")    
     BS<-bootstrapPredictiveModel1(X,Y, model = myEnetModel1$new(), numBootstrap= numBS, alpha=10^-10,core = numCore)
     return(BS)
   }
@@ -45,7 +49,8 @@ myBSModel1<-function(kk,
   set.fun <- match.arg(data.set)
   switch(set.fun, 
          CCLE = (myfun2 = myCCLE),
-         Sanger = (myfun2 = mySanger))
+         Sanger = (myfun2 = mySanger),
+         PRISM = (myfun2 = myPRISM))
   
   
   dataSet<-myfun2(data.type,drug.type)

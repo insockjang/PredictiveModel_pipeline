@@ -1,5 +1,5 @@
 myBSModel1<-function(kk,
-                    data.set = c("CCLE","Sanger","PRISM"),
+                    data.set = c("CCLE","Sanger","PRISM","CTRPv2"),
                     data.type = c("Mh","C","CMo","CMh","E","EMo","EMh","EC","ECMo","ECMh","MhL","CL","CMoL","CMhL","EL","EMoL","EMhL","ECL","ECMoL","ECMhL","E_rnaseq"), 
                     drug.type = c("ActArea","IC50","EC50"), 
                     model.type = c("ENet","Lasso","Ridge"), 
@@ -20,6 +20,10 @@ myBSModel1<-function(kk,
   }
   myPRISM <- function(X,Y){
     dataSets<-myData_PRISM(X,Y)
+    return(dataSets)
+  }
+  myCTRPv2 <- function(X,Y){
+    dataSets<-myData_CTRPv2(X,Y)
     return(dataSets)
   }
   
@@ -50,7 +54,8 @@ myBSModel1<-function(kk,
   switch(set.fun, 
          CCLE = (myfun2 = myCCLE),
          Sanger = (myfun2 = mySanger),
-         PRISM = (myfun2 = myPRISM))
+         PRISM = (myfun2 = myPRISM),
+         CTRPv2 = (myfun2 = myCTRPv2))
   
   
   dataSet<-myfun2(data.type,drug.type)

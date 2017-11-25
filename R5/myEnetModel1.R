@@ -1,6 +1,6 @@
 require(glmnet)
 myEnetModel1 <- setRefClass(Class = "myEnetModel1",
-                            contains="PredictiveModel",
+                            #contains="PredictiveModel",
                             fields="model",
                             methods = list(
                               initialize = function(...){
